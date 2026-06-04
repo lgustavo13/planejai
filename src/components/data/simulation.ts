@@ -77,7 +77,7 @@ export const simulationFormSteps: FormStepProps[] = [
       placeholder: 'ex: 12',
       suffix: 'meses',
       min: 1,
-      max: 120,
+      max: 12,
     },
     submitButtonProps: {
       label: 'Gerar simulação',
