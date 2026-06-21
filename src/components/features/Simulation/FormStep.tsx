@@ -19,7 +19,7 @@ export interface FormStepProps {
 
 interface ActionsButtonsProps {
   onBack: () => void
-  onNext: () => void
+  onNext: (value: string) => void
   hideBackButton?: boolean
 }
 
@@ -42,7 +42,7 @@ export function FormStep({
       return
     }
 
-    onNext()
+    onNext(inputValue)
   }
 
   return (
@@ -61,7 +61,7 @@ export function FormStep({
           value={inputValue}
           onChange={(e) =>
             setInputValue(
-              inputProps.prefix === 'R$ '
+              inputProps.prefix === 'R$'
                 ? formatCurrencyMask(e.target.value)
                 : e.target.value,
             )
