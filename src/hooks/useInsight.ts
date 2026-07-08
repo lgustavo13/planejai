@@ -1,16 +1,25 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { buildAIPrompt } from '@/components/data/aiPrompt'
+import type { SimulationRecord } from '@/components/data/simulation'
 import { getInsight, type InsightData } from '@/services/aiService'
 
 import { useSimulationStorage } from './useSimulationStorage'
 
 export const useInsight = (id: string) => {
-  const [insight, setInsight] = useState<InsightData | null>(null)
+  const isRequestPending = useRef(false)
+  const { getFormData, updateSimulation } = useSimulationStorage()
+  const [insight, setInsight] = useState<InsightData | null>(() => {
+    const simulation = getFormData(id)
+
+    if (simulation?.insight) {
+      return simulation.insight
+    }
+
+    return null
+  })
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-
-  const { getFormData } = useSimulationStorage()
 
   const fetchInsight = useCallback(
     async (simulationId: string) => {
@@ -21,6 +30,7 @@ export const useInsight = (id: string) => {
         return
       }
 
+      isRequestPending.current = true
       setIsLoading(true)
       setError(null)
 
@@ -28,21 +38,26 @@ export const useInsight = (id: string) => {
         const prompt = buildAIPrompt(simulation)
         const data = await getInsight(prompt)
         setInsight(data)
+
+        updateSimulation(simulationId, {
+          ...simulation,
+          insight: data,
+        } as SimulationRecord)
       } catch {
         setError('Erro ao gerar o diagnóstico. Tente novamente.')
       } finally {
+        isRequestPending.current = false
         setIsLoading(false)
       }
     },
-    [getFormData],
+    [getFormData, updateSimulation],
   )
 
   useEffect(() => {
-    if (insight || isLoading || error) {
+    if (insight || isLoading || error || isRequestPending.current) {
       return
     }
 
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchInsight(id)
   }, [id, isLoading, fetchInsight, insight, error])
 
