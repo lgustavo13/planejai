@@ -37,7 +37,7 @@ const RESPONSE_SCHEMA = JSON.stringify(
   2,
 )
 
-export function buildAIPropmpt(simulation: SimulationRecord) {
+export function buildAIPrompt(simulation: SimulationRecord) {
   const { income, expenses, debits, goalName, goalAmount, goalDeadLine } =
     simulation
 
