@@ -59,6 +59,7 @@ export function Content({ insight }: ContentProps) {
   const status = insight.feasibility?.status
     ? statusStyles[insight.feasibility.status]
     : null
+  console.log(insight)
 
   return (
     <div className="lg:[scrollbar-color-var(--border)_transparent] lg:max-h-93 lg:scrollbar-thin lg:overflow-y-auto lg:pr-2">
