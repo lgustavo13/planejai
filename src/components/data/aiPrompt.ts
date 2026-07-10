@@ -9,7 +9,7 @@ const RESPONSE_SCHEMA = JSON.stringify(
       content:
         '<Análise objetiva sobre se a meta é atingivel no prazo com o valor disponível. Mencione os números relevantes.>',
     },
-    Diagnosis: {
+    diagnosis: {
       content:
         '<Diagnóstico focado no comprometimento do orçamento: quanto % da renda está comprometida com gastos e dividas>',
     },
