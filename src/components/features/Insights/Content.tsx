@@ -32,6 +32,12 @@ function OrderedList({ items }: { items: string[] }) {
   )
 }
 
+function ErrorMessage() {
+  return (
+    <p className="text-sm text-red-500">Não foi possível gerar o conteúdo.</p>
+  )
+}
+
 const statusStyles = {
   viable: {
     label: 'Meta viável no prazo',
@@ -50,7 +56,9 @@ const statusStyles = {
 }
 
 export function Content({ insight }: ContentProps) {
-  const status = statusStyles[insight.feasibility.status] ?? null
+  const status = insight.feasibility?.status
+    ? statusStyles[insight.feasibility.status]
+    : null
 
   return (
     <div className="lg:[scrollbar-color-var(--border)_transparent] lg:max-h-93 lg:scrollbar-thin lg:overflow-y-auto lg:pr-2">
@@ -67,32 +75,44 @@ export function Content({ insight }: ContentProps) {
             </span>
           )}
         </div>
-        <Paragraph>{insight.feasibility.content}</Paragraph>
+        {insight.feasibility?.content ? (
+          <Paragraph>{insight.feasibility.content}</Paragraph>
+        ) : (
+          <ErrorMessage />
+        )}
       </section>
 
       <section>
         <SectionTitle>💰 Diagnóstico Financeiro</SectionTitle>
-        <Paragraph>{insight.diagnosis.content}</Paragraph>
+        {insight.diagnosis?.content ? (
+          <Paragraph>{insight.diagnosis.content}</Paragraph>
+        ) : (
+          <ErrorMessage />
+        )}
       </section>
 
       <section>
         <SectionTitle>📋 Sugestões Práticas</SectionTitle>
-        <OrderedList items={insight.suggestions.items} />
+        <OrderedList items={insight.suggestions?.items || []} />
       </section>
 
       <section>
         <SectionTitle>💡 Como Aumentar sua Renda</SectionTitle>
-        <OrderedList items={insight.extraIncome.items} />
+        <OrderedList items={insight.extraIncome?.items || []} />
       </section>
 
       <section>
         <SectionTitle>🏦 Sugestões de Investimento</SectionTitle>
-        <OrderedList items={insight.investment.items} />
+        <OrderedList items={insight.investment?.items || []} />
       </section>
 
       <section>
         <SectionTitle>🚀 Mensagem Final</SectionTitle>
-        <Paragraph>{insight.motivation.content}</Paragraph>
+        {insight.motivation?.content ? (
+          <Paragraph>{insight.motivation.content}</Paragraph>
+        ) : (
+          <ErrorMessage />
+        )}
       </section>
     </div>
   )
