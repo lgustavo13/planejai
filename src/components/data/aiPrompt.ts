@@ -76,3 +76,34 @@ export function buildAIPrompt(simulation: SimulationRecord) {
     - "unfeasible": saldo negativo superior a 20% do valor da economia mensa necessária
   `
 }
+
+export function buildChatPrompt(
+  simulation: SimulationRecord,
+  question: string,
+) {
+  const { income, expenses, debits, goalName, goalAmount, goalDeadLine } =
+    simulation
+
+  const monthlySavings = calcMounthlySavings(simulation)
+
+  return `Você é um educador financeiro especializado em finanças pessoais.
+  O usuário já realizou uma simulação financeira com os seguintes dados:
+
+  - Renda mensal bruta: R$ ${income}
+  - Custos fixos essenciais: R$ ${expenses}
+  - Dívidas e parcelas mensais: R$ ${debits}
+  - Meta: ${goalName}
+  - Custo da meta: R$ ${goalAmount}
+  - Prazo desejado: ${goalDeadLine} meses
+  - Economia mensal disponível: R$ ${monthlySavings.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+
+  Agora o usuário fez a seguinte pergunta:
+  "${question}"
+
+  Responda de forma clara, didática e personalizada, usando os dados da simulação quando relevante.
+  Use linguagem acessível para pessoas sem conhecimento financeiro.
+  Responda em texto puro, sem markdown, sem JSON, sem formatação especial.
+  Seja direto e objetivo, com no máximo 3 parágrafos.
+  Todos os textos em português do Brasil.
+  `
+}
